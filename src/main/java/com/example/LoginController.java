@@ -17,6 +17,9 @@ import static org.springframework.security.web.context.HttpSessionSecurityContex
 
 public class LoginController {
 
+    @Autowired
+    private UserRepository userRepository;
+
     /**
      * 注入身份认证管理器
      */
@@ -66,6 +69,22 @@ public class LoginController {
                 sc.setAuthentication(authenticate);
                 session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
                 // 重定向到登录成功页面
+                System.out.println(authenticate.getAuthorities());
+                Object principal = authenticate.getPrincipal();
+                System.out.println(principal.getClass());
+                //判断数据是否为空 以及类型是否正确
+                if (null != principal && principal instanceof org.springframework.security.core.userdetails.User) {
+//                    String username = ((org.springframework.security.core.userdetails.User) principal).getUsername();
+//                    System.out.println(username);
+                    User user = userRepository.getByUsername(username);
+
+                    if (user.getEmail().equals("new")) {
+
+                        return "redirect:/new";
+
+                    }
+
+                }
                 return "redirect:/";
 
             } else {

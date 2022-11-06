@@ -18,6 +18,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
+    private LoginSuccessHandler loginSuccessHandler;
+
+    @Autowired
     private DataSource dataSource;
 
     @Bean
@@ -46,6 +49,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .access("@rbacService.hasPermission(request , authentication)")
                 .and()
                 .formLogin().loginPage("/login")
+                .successHandler(loginSuccessHandler)
                 .permitAll()
                 .and()
                 .logout().permitAll()
