@@ -12,6 +12,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
@@ -19,6 +20,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private LoginSuccessHandler loginSuccessHandler;
+    @Autowired
+    private CustomLoginFailureHandler loginFailureHandler;
 
     @Autowired
     private DataSource dataSource;
@@ -27,6 +30,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    BCryptPasswordEncoder bCryptPasswordEncoder() {
+        return new BCryptPasswordEncoder();
     }
 
     @Autowired
@@ -41,15 +49,21 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/common/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/logout").permitAll()
                 .antMatchers("/verify").permitAll()
+                .antMatchers("/home").authenticated()
+                .antMatchers("/user/info").authenticated()
+                .antMatchers("/change/password").authenticated()
+                .antMatchers("/new/password").authenticated()
                 .anyRequest()
                 .access("@rbacService.hasPermission(request , authentication)")
                 .and()
                 .formLogin().loginPage("/login")
                 .successHandler(loginSuccessHandler)
+                .failureHandler(loginFailureHandler)
                 .permitAll()
                 .and()
                 .logout().permitAll()

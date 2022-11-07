@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="ISO-8859-1">
+        <title>List Roles</title>
+        <link rel="stylesheet" type="text/css" href="/webjars/bootstrap/5.2.2/css/bootstrap.min.css" />
+        <script type="text/javascript" src="/webjars/jquery/3.6.1/jquery.min.js"></script>
+        <script type="text/javascript" src="/webjars/bootstrap/5.2.2/js/bootstrap.min.js"></script>
+    </head>
+    <body>
+        <div class="container text-center">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span sec:authentication="name">name</span></b>
+                &nbsp;
+                <i><span sec:authentication="principal.authorities">Roles</span></i>
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Logout" />
+            </form>
+
+            <h1>Role Manager</h1>
+            <div sec:authorize="hasAnyAuthority('role_create')">
+                <a href="/role/new">Create New Role</a>
+            </div>
+
+            <br/><br/>
+            <table  class="table table-striped table-bordered">
+                <thead class="table-dark">
+                    <tr>
+                        <th>Role ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Roles</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="role: ${listRoles}">
+                        <td th:text="${role.id}">Role ID</td>
+                        <td th:text="${role.name}">Name</td>
+                        <td th:text="${role.description}">Description</td>
+                        <td th:text="${role.permissions}">Permissions</td>
+                        <td>
+                            <a sec:authorize="hasAuthority('role_edit')" th:href="@{'/role/edit/' + ${role.id}}">Edit</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a sec:authorize="hasAuthority('role_delete')" th:href="@{'/role/delete/' + ${role.id}}">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>

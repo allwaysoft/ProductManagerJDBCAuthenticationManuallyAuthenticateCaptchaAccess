@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5">
+    <head>
+        <meta charset="ISO-8859-1">
+        <title>Permission Manager</title>
+    </head>
+    <body>
+        <div align="center">
+            <div sec:authorize="isAuthenticated()">
+                Welcome <b><span sec:authentication="name">Username</span></b>
+                &nbsp;
+                <i><span sec:authentication="principal.authorities">Roles</span></i>
+            </div>
+
+            <form th:action="@{/logout}" method="post">
+                <input type="submit" value="Logout" />
+            </form>
+
+            <h1>Permission Manager</h1>
+            <div sec:authorize="hasAnyAuthority('permission_create')">
+                <a href="/permission/new">Create New Permission</a>
+            </div>
+
+            <br/><br/>
+            <table border="1" cellpadding="10">
+                <thead>
+                    <tr>
+                        <th>Permission ID</th>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>URI</th>
+                        <th>Method</th>
+
+                        <th sec:authorize="hasAnyAuthority('permission_edit', 'permission_delete')">Actions</th>
+
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="permission : ${listPermissions}">
+                        <td th:text="${permission.id}">Permission ID</td>
+                        <td th:text="${permission.name}">Name</td>
+                        <td th:text="${permission.description}">Description</td>
+                        <td th:text="${permission.uri}">URI</td>
+                        <td th:text="${permission.method}">Method</td>
+
+                        <td>
+                            <a sec:authorize="hasAuthority('permission_edit')" th:href="@{'/permission/edit/' + ${permission.id}}">Edit</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a sec:authorize="hasAuthority('permission_delete')" th:href="@{'/permission/delete/' + ${permission.id}}">Delete</a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </body>
+</html>

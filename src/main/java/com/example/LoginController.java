@@ -1,5 +1,6 @@
 package com.example;
 
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
@@ -11,11 +12,17 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
+import org.springframework.ui.Model;
+import org.springframework.web.servlet.ModelAndView;
 
 @Controller
 
 public class LoginController {
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserRepository userRepository;
@@ -78,11 +85,9 @@ public class LoginController {
 //                    System.out.println(username);
                     User user = userRepository.getByUsername(username);
 
-                    if (user.getEmail().equals("new")) {
+                    String homepage = "redirect:/" + user.getHomepage();
 
-                        return "redirect:/new";
-
-                    }
+                    return homepage;
 
                 }
                 return "redirect:/";
@@ -95,5 +100,61 @@ public class LoginController {
             ex.printStackTrace();
         }
         return "login";
+    }
+
+    @GetMapping("/register")
+    public String showRegistrationForm(Model model) {
+        model.addAttribute("user", new User());
+
+        return "signup_form";
+    }
+
+    @PostMapping("/process_register")
+    public String processRegister(User user) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encodedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encodedPassword);
+
+        userRepository.save(user);
+
+        return "register_success";
+    }
+
+    @GetMapping("/users")
+    public String listUsers(Model model) {
+        List<User> listUsers = userRepository.findAll();
+        model.addAttribute("listUsers", listUsers);
+
+        return "users";
+    }
+
+    @GetMapping("/users/edit/{id}")
+    public String editUser(@PathVariable("id") Integer id, Model model) {
+        User user = userService.get(id);
+        List<Role> listRoles = userService.listRoles();
+        model.addAttribute("user", user);
+        model.addAttribute("listRoles", listRoles);
+        return "user_form";
+    }
+
+    @PostMapping("/users/save")
+    public String saveUser(User user) {
+        userService.save(user);
+
+        return "redirect:/users";
+    }
+
+    @RequestMapping(value = "/home", method = RequestMethod.GET)
+    public ModelAndView home() {
+        ModelAndView modelAndView = new ModelAndView();
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.findUserByUsername(auth.getName());
+        String name = SecurityContextHolder.getContext().getAuthentication().getPrincipal().toString();
+        System.out.println(name);
+        modelAndView.addObject("userName",
+                "Welcome " + user.getUsername());
+        modelAndView.addObject("adminMessage", "Content Available Only for Users with Admin Role");
+        modelAndView.setViewName("home");
+        return modelAndView;
     }
 }
