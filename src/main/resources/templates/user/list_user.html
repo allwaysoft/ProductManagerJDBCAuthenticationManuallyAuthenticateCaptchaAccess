@@ -48,6 +48,8 @@
                         <td>
                             <a sec:authorize="hasAuthority('user_edit')" th:href="@{'/user/edit/' + ${user.id}}">Edit</a>
                             &nbsp;&nbsp;&nbsp;&nbsp;
+                            <a sec:authorize="hasAuthority('user_edit')" th:href="@{'/user/resetpassword/' + ${user.id}}">重置密码</a>
+                            &nbsp;&nbsp;&nbsp;&nbsp;
                             <a sec:authorize="hasAuthority('user_delete')" th:href="@{'/user/delete/' + ${user.id}}">Delete</a>
                         </td>
                     </tr>

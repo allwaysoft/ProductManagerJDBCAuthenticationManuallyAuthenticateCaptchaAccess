@@ -3,17 +3,12 @@ package com.example;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import static org.springframework.security.web.context.HttpSessionSecurityContextRepository.SPRING_SECURITY_CONTEXT_KEY;
 import org.springframework.ui.Model;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -26,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     /**
      * 注入身份认证管理器
@@ -60,6 +58,37 @@ public class UserController {
     @PostMapping("/user/save")
     public String saveUser(User user) {
         userService.save(user);
+
+        return "redirect:/user";
+    }
+
+    @PostMapping("/user/update")
+    public String updateUser(User user) {
+        User repoUser = userRepository.findById(user.getId()).orElse(null);
+        repoUser.setUsername(user.getUsername());
+        repoUser.setEmail(user.getEmail());
+        repoUser.setName(user.getName());
+        repoUser.setEnabled(user.getEnabled());
+        repoUser.setHomepage(user.getHomepage());
+        repoUser.setRoles(user.getRoles());
+        userRepository.save(repoUser);
+
+        return "redirect:/user";
+    }
+
+    @GetMapping("/user/resetpassword/{id}")
+    public String showResetPasswordForm(@PathVariable("id") Integer id, Model model) {
+        User user = userRepository.findById(id).orElse(null);
+        model.addAttribute("user", user);
+        return "user/reset_password";
+    }
+
+    @PostMapping("/user/savepassword")
+    public String savePassword(User user) {
+        User repoUser = userRepository.findById(user.getId()).orElse(null);
+
+        repoUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        userRepository.save(repoUser);
 
         return "redirect:/user";
     }

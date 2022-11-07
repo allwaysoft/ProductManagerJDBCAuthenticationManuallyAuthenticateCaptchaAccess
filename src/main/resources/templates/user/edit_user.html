@@ -12,7 +12,7 @@
             <div>
                 <h1>Edit User</h1>
             </div>
-            <form th:action="@{/user/save}" th:object="${user}"
+            <form th:action="@{/user/update}" th:object="${user}"
                   method="post" style="max-width: 600px; margin: 0 auto;">
                 <input type="hidden" th:field="*{id}" />
                 <div class="form-group row">
@@ -25,13 +25,7 @@
 
 
 
-                <div class="form-group row">
-                    <label class="col-4 col-form-label">Password: </label>
-                    <div class="col-8">
-                        <input type="password" th:field="*{password}" class="form-control"
-                               required minlength="6" maxlength="10"/>
-                    </div>
-                </div>
+
                 <div class="m-3">
                     <div class="form-group row">
                         <label class="col-4 col-form-label">E-mail: </label>
