@@ -99,8 +99,10 @@ public class UserService {
         User user = new User();
         user.setEmail(userDTO.getEmail());
         user.setUsername(userDTO.getUsername());
+        user.setName(userDTO.getName());
         user.setEmail(userDTO.getEmail());
         user.setHomepage(userDTO.getHomepage());
+        System.out.println(userDTO.getPassword());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
         user.setEnabled(1);
 

@@ -1,6 +1,7 @@
 package com.example;
 
 import java.util.List;
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -10,6 +11,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.servlet.ModelAndView;
 
 @Controller
@@ -33,7 +35,7 @@ public class UserController {
 
     @GetMapping("/user/new")
     public String showRegistrationForm(Model model) {
-        model.addAttribute("user", new User());
+        model.addAttribute("user", new UserDTO());
 
         return "user/new_user";
     }
@@ -56,8 +58,11 @@ public class UserController {
     }
 
     @PostMapping("/user/save")
-    public String saveUser(User user) {
-        userService.save(user);
+    public String saveUser(@Valid @ModelAttribute("user") UserDTO user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "user/new_user";
+        }
+        userService.saveUser(user);
 
         return "redirect:/user";
     }
