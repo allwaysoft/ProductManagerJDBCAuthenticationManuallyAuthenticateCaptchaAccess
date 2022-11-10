@@ -84,12 +84,18 @@ public class UserController {
     @GetMapping("/user/resetpassword/{id}")
     public String showResetPasswordForm(@PathVariable("id") Integer id, Model model) {
         User user = userRepository.findById(id).orElse(null);
-        model.addAttribute("user", user);
+        UserResetPasswordDTO userResetPasswordDTO = new UserResetPasswordDTO();
+        userResetPasswordDTO.setId(user.getId());
+        userResetPasswordDTO.setUsername(user.getUsername());
+        model.addAttribute("user", userResetPasswordDTO);
         return "user/reset_password";
     }
 
     @PostMapping("/user/savepassword")
-    public String savePassword(User user) {
+    public String savePassword(@Valid @ModelAttribute("user") UserResetPasswordDTO user, BindingResult bindingResult) {
+        if (bindingResult.hasErrors()) {
+            return "user/reset_password";
+        }
         User repoUser = userRepository.findById(user.getId()).orElse(null);
 
         repoUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
@@ -117,36 +123,78 @@ public class UserController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/change/password", method = RequestMethod.GET)
-    public ModelAndView changePassword() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("userDTO", new UserDTO());
-        modelAndView.setViewName("password-update");
-        return modelAndView;
+//    @RequestMapping(value = "/change/password", method = RequestMethod.GET)
+//    public ModelAndView changePassword() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        modelAndView.addObject("userDTO", new UserChangePasswordDTO());
+//        modelAndView.setViewName("password-update");
+//        return modelAndView;
+//    }
+    @GetMapping("/change/password")
+
+    public String changePassword(Model model) {
+
+        model.addAttribute("userDTO", new UserChangePasswordDTO());
+        return "password-update";
+
     }
 
-    @RequestMapping(value = "/new/password", method = RequestMethod.POST)
-    public ModelAndView newPassword(UserDTO userDTO) {
-        ModelAndView modelAndView = new ModelAndView();
+//    @RequestMapping(value = "/new/password", method = RequestMethod.POST)
+//    public ModelAndView newPassword(@Valid @ModelAttribute("userDTO") UserChangePasswordDTO userChangePasswordDTO, BindingResult bindingResult) {
+//        if (bindingResult.hasErrors()) {
+//            ModelAndView modelAndView = new ModelAndView();
+//            modelAndView.addObject("userDTO", new UserChangePasswordDTO());
+//            modelAndView.setViewName("password-update");
+//            return modelAndView;
+//        }
+//        ModelAndView modelAndView = new ModelAndView();
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//
+//        if (userChangePasswordDTO.getNewPass().equals(userChangePasswordDTO.getConfirmPass())) {
+//            User user = userService.findUserByUsername(auth.getName());
+//            Boolean status = userService.isPasswordValid(userChangePasswordDTO.getPassword(), user.getPassword());
+//            if (status == true) {
+//
+//                userService.changePassword(user, userChangePasswordDTO);
+//                modelAndView.setViewName("login");
+//            } else {
+//                modelAndView.addObject("wrongPass", "Current possword was wrong..!");
+//                modelAndView.setViewName("password-update");
+//            }
+//
+//        } else {
+//            modelAndView.addObject("passMatched", "Password doesn't matched..!");
+//            modelAndView.setViewName("password-update");
+//        }
+//        return modelAndView;
+//    }
+    @PostMapping("/new/password")
+    public String
+            newPassword(@Valid @ModelAttribute("userDTO") UserChangePasswordDTO userChangePasswordDTO, BindingResult bindingResult, Model model) {
+        if (bindingResult.hasErrors()) {
+            return "password-update";
+
+        }
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
 
-        if (userDTO.getNewPass().equals(userDTO.getConfirmPass())) {
+        if (userChangePasswordDTO.getNewPass().equals(userChangePasswordDTO.getConfirmPass())) {
             User user = userService.findUserByUsername(auth.getName());
-            Boolean status = userService.isPasswordValid(userDTO.getPassword(), user.getPassword());
+            Boolean status = userService.isPasswordValid(userChangePasswordDTO.getPassword(), user.getPassword());
             if (status == true) {
 
-                userService.changePasswor(user, userDTO);
-                modelAndView.setViewName("login");
+                userService.changePassword(user, userChangePasswordDTO);
+                return "login";
             } else {
-                modelAndView.addObject("wrongPass", "Current possword was wrong..!");
-                modelAndView.setViewName("password-update");
+                model.addAttribute("wrongPass", "Current possword was wrong..!");
+                return "password-update";
             }
 
         } else {
-            modelAndView.addObject("passMatched", "Password doesn't matched..!");
-            modelAndView.setViewName("password-update");
+            model.addAttribute("passMatched", "Password doesn't matched..!");
+            return "password-update";
         }
-        return modelAndView;
+
     }
 
 }

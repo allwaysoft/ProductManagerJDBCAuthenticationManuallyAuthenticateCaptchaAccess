@@ -19,8 +19,4 @@ public class UserDTO {
 
     private int enabled;
 
-    private String newPass;
-
-    private String confirmPass;
-
 }

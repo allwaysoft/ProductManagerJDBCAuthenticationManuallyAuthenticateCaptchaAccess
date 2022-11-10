@@ -78,8 +78,8 @@ public class UserService {
         return userRepository.findByUsername(username);
     }
 
-    public void changePasswor(User user, UserDTO userDTO) {
-        user.setPassword(bCryptPasswordEncoder.encode(userDTO.getNewPass()));
+    public void changePassword(User user, UserChangePasswordDTO userChangePasswordDTO) {
+        user.setPassword(bCryptPasswordEncoder.encode(userChangePasswordDTO.getNewPass()));
         userRepository.save(user);
     }
 
