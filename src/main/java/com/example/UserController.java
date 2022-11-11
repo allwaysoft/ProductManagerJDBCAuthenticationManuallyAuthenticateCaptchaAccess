@@ -111,16 +111,26 @@ public class UserController {
         return "redirect:/user";
     }
 
-    @RequestMapping(value = "user/info", method = RequestMethod.GET)
-    public ModelAndView userProfile() {
-        ModelAndView modelAndView = new ModelAndView();
+//    @RequestMapping(value = "user/info", method = RequestMethod.GET)
+//    public ModelAndView userProfile() {
+//        ModelAndView modelAndView = new ModelAndView();
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        System.out.println(auth.getName());
+//        User user = userRepository.getByUsername(auth.getName());
+//        modelAndView.addObject("user", user);
+//        modelAndView.addObject("userName", user.getUsername());
+//        modelAndView.setViewName("user-profile");
+//        return modelAndView;
+//    }
+    @GetMapping("user/info")
+    public String userProfile(Model model) {
+
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         System.out.println(auth.getName());
         User user = userRepository.getByUsername(auth.getName());
-        modelAndView.addObject("user", user);
-        modelAndView.addObject("userName", user.getUsername());
-        modelAndView.setViewName("user-profile");
-        return modelAndView;
+        model.addAttribute("user", user);
+
+        return "user/user-profile";
     }
 
 //    @RequestMapping(value = "/change/password", method = RequestMethod.GET)
