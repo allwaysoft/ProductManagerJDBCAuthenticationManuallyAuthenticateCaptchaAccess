@@ -39,50 +39,60 @@
                             <div class="table-title">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <h2><b>重置密码</b></h2>
+                                        <h2><b>账号信息</b></h2>
                                     </div>
-                                    <div class="col-sm-6">
-                                        <a href="/user" class="btn btn-success" ><i class="bi bi-arrow-left"></i></a>
-                                    </div>
+
                                 </div>
                             </div>
 
-                            <form th:action="@{/user/savepassword}" th:object="${user}"
-                                  method="post" style="max-width: 600px; margin: 0 auto;">
-                                <input type="hidden" th:field="*{id}" />
-                                <div class="form-group row">
-                                    <label class="col-4 col-form-label">User Name: </label>
-                                    <div class="col-8">
-                                        <input readonly type="text" th:field="*{username}" class="form-control"
-                                               required minlength="2" maxlength="20"/>
-                                    </div>
+
+
+                            <div class="col-sm-12">
+                                <div class="form-group">
+                                    <label class=" control-label">User ID</label> <label
+                                        class=" control-label" th:utext="${user.id}"></label>
                                 </div>
 
-
-                                <div class="form-group row">
-                                    <label class="col-4 col-form-label">Password: </label>
-                                    <div class="col-8">
-                                        <input type="password" th:field="*{password}" class="form-control"
-                                               required minlength="8" maxlength="30"/>
-                                        <ul class="text-danger"
-                                            th:each="error: ${#fields.errors('password')}">
-                                            <li th:each="message : ${error.split(',')}">
-                                                <p class="error-message"
-                                                   th:text="${message}"></p>
-                                            </li>
-                                        </ul>
-                                    </div>
+                                <div class="form-group">
+                                    <label class=" control-label">User Name:</label> <label
+                                        class=" control-label" th:utext="${user.username}"></label>
                                 </div>
 
-
-
-
-
-                                <div>
-                                    <button type="submit" class="btn btn-primary">Update</button>
+                                <div class="form-group">
+                                    <label class=" control-label">Email:</label> <label
+                                        class=" control-label" th:utext="${user.email}"></label>
+                                </div>
+                                <div class="form-group">
+                                    <label class=" control-label">Name:</label> <label
+                                        class=" control-label" th:utext="${user.name}"></label>
                                 </div>
 
-                            </form>
+                                <div class="form-group">
+                                    <label class=" control-label">Enabled:</label> <label
+                                        class=" control-label" th:utext="${user.enabled}"></label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class=" control-label">Home page:</label> <label
+                                        class=" control-label" th:utext="${user.homepage}"></label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class=" control-label">Roles:</label> <label
+                                        class=" control-label" th:utext="${user.roles}"></label>
+                                </div>
+
+                                <div class="form-group">
+                                    <label class=" control-label">Permissions:</label> <label
+                                        class=" control-label" sec:authentication="principal.authorities"></label>
+                                </div>
+                                <br />
+                                <a th:href="${'/change/password'}" > 更改密码</a> <br /> <br />
+                            </div>
+
+
+
+
 
                         </div>
                     </div>
