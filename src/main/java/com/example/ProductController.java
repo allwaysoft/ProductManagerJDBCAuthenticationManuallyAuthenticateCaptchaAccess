@@ -17,32 +17,32 @@ public class ProductController {
     @Autowired
     private ProductService service;
 
-    @RequestMapping("/")
+    @RequestMapping("/product")
     public String viewHomePage(Model model) {
         List<Product> listProducts = service.listAll();
         model.addAttribute("listProducts", listProducts);
 
-        return "index";
+        return "product/list_product";
     }
 
-    @RequestMapping("/new")
+    @RequestMapping("/product/new")
     public String showNewProductForm(Model model) {
         Product product = new Product();
         model.addAttribute("product", product);
 
-        return "new_product";
+        return "product/new_product";
     }
 
-    @RequestMapping(value = "/save", method = RequestMethod.POST)
+    @RequestMapping(value = "/product/save", method = RequestMethod.POST)
     public String saveProduct(@ModelAttribute("product") Product product) {
         service.save(product);
 
-        return "redirect:/";
+        return "redirect:/product";
     }
 
-    @RequestMapping("/edit/{id}")
+    @RequestMapping("/product/edit/{id}")
     public ModelAndView showEditProductForm(@PathVariable(name = "id") Long id) {
-        ModelAndView mav = new ModelAndView("edit_product");
+        ModelAndView mav = new ModelAndView("product/edit_product");
 
         Product product = service.get(id);
         mav.addObject("product", product);
@@ -50,10 +50,10 @@ public class ProductController {
         return mav;
     }
 
-    @RequestMapping("/delete/{id}")
+    @RequestMapping("/product/delete/{id}")
     public String deleteProduct(@PathVariable(name = "id") Long id) {
         service.delete(id);
 
-        return "redirect:/";
+        return "redirect:/product";
     }
 }

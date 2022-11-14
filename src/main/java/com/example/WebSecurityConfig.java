@@ -94,6 +94,7 @@ public class WebSecurityConfig {
                 .antMatchers("/user/info").authenticated()
                 .antMatchers("/change/password").authenticated()
                 .antMatchers("/new/password").authenticated()
+                .antMatchers("/").authenticated()
                 .anyRequest()
                 .access("@rbacService.hasPermission(request , authentication)")
                 .and()

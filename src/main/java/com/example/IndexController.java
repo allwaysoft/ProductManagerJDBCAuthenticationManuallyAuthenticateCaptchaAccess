@@ -21,6 +21,11 @@ import org.springframework.web.servlet.ModelAndView;
 
 public class IndexController {
 
+    @GetMapping("/")
+    public String index() {
+        return "index";
+    }
+
     @GetMapping("/index2")
     public String index2() {
         return "index2";
