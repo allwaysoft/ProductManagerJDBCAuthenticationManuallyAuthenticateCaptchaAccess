@@ -76,6 +76,15 @@ public class WebSecurityConfig {
     @Bean
     protected SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeRequests()
+                .antMatchers("/header").permitAll()
+                .antMatchers("/footer").permitAll()
+                .antMatchers("/sidebar").permitAll()
+                .antMatchers("/index2").permitAll()
+                .antMatchers("/index3").permitAll()
+                .antMatchers("/pages/**").permitAll()
+                .antMatchers("/css/**").permitAll()
+                .antMatchers("/js/**").permitAll()
+                .antMatchers("/assets/**").permitAll()
                 .antMatchers("/webjars/**").permitAll()
                 .antMatchers("/common/**").permitAll()
                 .antMatchers("/login").permitAll()

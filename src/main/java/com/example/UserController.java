@@ -130,7 +130,7 @@ public class UserController {
         User user = userRepository.getByUsername(auth.getName());
         model.addAttribute("user", user);
 
-        return "user/user-profile";
+        return "user/user_profile";
     }
 
 //    @RequestMapping(value = "/change/password", method = RequestMethod.GET)
@@ -145,7 +145,7 @@ public class UserController {
     public String changePassword(Model model) {
 
         model.addAttribute("userDTO", new UserChangePasswordDTO());
-        return "password-update";
+        return "user/password_update";
 
     }
 
@@ -182,7 +182,7 @@ public class UserController {
     public String
             newPassword(@Valid @ModelAttribute("userDTO") UserChangePasswordDTO userChangePasswordDTO, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {
-            return "password-update";
+            return "user/password_update";
 
         }
 
@@ -197,12 +197,12 @@ public class UserController {
                 return "login";
             } else {
                 model.addAttribute("wrongPass", "Current possword was wrong..!");
-                return "password-update";
+                return "user/password_update";
             }
 
         } else {
             model.addAttribute("passMatched", "Password doesn't matched..!");
-            return "password-update";
+            return "user/password_update";
         }
 
     }
