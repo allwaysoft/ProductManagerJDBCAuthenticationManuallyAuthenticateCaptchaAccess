@@ -28,7 +28,7 @@
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">主页</a></li>
-                        <li class="breadcrumb-item active">权限管理</li>
+                        <li class="breadcrumb-item active">产品管理</li>
                     </ol>
                 </nav>
             </div>
@@ -39,35 +39,31 @@
                             <div class="table-title">
                                 <div class="row">
                                     <div class="col-sm-6">
-                                        <h2><b>编辑权限</b></h2>
+                                        <h2><b>添加产品</b></h2>
                                     </div>
                                     <div class="col-sm-6">
-                                        <a href="/permission" class="btn btn-success" ><i class="bi bi-arrow-left"></i></a>
+                                        <a href="/product" class="btn btn-success" ><i class="bi bi-arrow-left"></i></a>
                                     </div>
                                 </div>
                             </div>
 
-                            <form action="#" th:action="@{/permission/save}" th:object="${permission}" method="post">
+                            <form action="#" th:action="@{/product/save}" th:object="${product}" method="post">
                                 <table border="0" cellpadding="10">
                                     <tr>
-                                        <td>Permission ID:</td>
-                                        <td><input type="text" th:field="*{id}" readonly="readonly" /></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Permission Name:</td>
+                                        <td>Product Name:</td>
                                         <td><input type="text" th:field="*{name}" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Description:</td>
-                                        <td><input type="text" th:field="*{description}" /></td>
+                                        <td>Brand:</td>
+                                        <td><input type="text" th:field="*{brand}" /></td>
                                     </tr>
                                     <tr>
-                                        <td>URI:</td>
-                                        <td><input type="text" th:field="*{uri}" /></td>
+                                        <td>Made in:</td>
+                                        <td><input type="text" th:field="*{madein}" /></td>
                                     </tr>
                                     <tr>
-                                        <td>Method:</td>
-                                        <td><input type="text" th:field="*{method}" /></td>
+                                        <td>Price:</td>
+                                        <td><input type="text" th:field="*{price}" /></td>
                                     </tr>
                                     <tr>
                                         <td colspan="2"><button type="submit">Save</button></td>

@@ -28,7 +28,7 @@
                 <nav>
                     <ol class="breadcrumb">
                         <li class="breadcrumb-item"><a href="index.html">主页</a></li>
-                        <li class="breadcrumb-item active">角色管理</li>
+                        <li class="breadcrumb-item active">产品管理</li>
                     </ol>
                 </nav>
             </div>
@@ -43,11 +43,11 @@
                                 <div class="table-title">
                                     <div class="row">
                                         <div class="col-sm-6">
-                                            <h2> <b>角色管理</b></h2>
+                                            <h2> <b>产品管理</b></h2>
                                         </div>
                                         <div class="col-sm-6">
-                                            <div sec:authorize="hasAnyAuthority('role_create')">
-                                                <a href="/role/new" class="btn btn-success" ><i class="bi bi-plus-circle" data-toggle="tooltip" title="添加角色"></i></a>
+                                            <div sec:authorize="hasAnyAuthority('product_create')">
+                                                <a href="/product/new" class="btn btn-success" ><i class="bi bi-plus-circle" data-toggle="tooltip" title="添加产品"></i></a>
                                             </div>
                                         </div>
                                     </div>
@@ -57,22 +57,27 @@
                                         <tr>
                                             <th>ID</th>
                                             <th>Name</th>
-                                            <th>Description</th>
-                                            <th>Permissions</th>
+                                            <th>Brand</th>
+                                            <th>Made In</th>
+                                            <th>Price</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="role: ${listRoles}">
-                                            <td th:text="${role.id}">Role ID</td>
-                                            <td th:text="${role.name}">Name</td>
-                                            <td th:text="${role.description}">Description</td>
-                                            <td th:text="${role.permissions}">Permissions</td>
+                                        <tr th:each="product : ${listProducts}">
+                                            <td th:text="${product.id}">Product ID</td>
+                                            <td th:text="${product.name}">Name</td>
+                                            <td th:text="${product.brand}">Brand</td>
+                                            <td th:text="${product.madein}">Made in</td>
+                                            <td th:text="${product.price}">Price</td>
+
                                             <td>
-                                                <a sec:authorize="hasAuthority('role_edit')" th:href="@{'/role/edit/' + ${role.id}}" class="edit"><i class="bi bi-pencil" data-toggle="tooltip" title="编辑"></i></a>
-                                                <a sec:authorize="hasAuthority('role_delete')" th:href="@{'/role/delete/' + ${role.id}}" class="delete" ><i class="bi bi-trash" data-toggle="tooltip" title="删除"></i></a>
+                                                <a sec:authorize="hasAuthority('product_edit')" th:href="@{'/product/edit/' + ${product.id}}" class="edit"><i class="bi bi-pencil" data-toggle="tooltip" title="编辑"></i></a>
+                                                <a sec:authorize="hasAuthority('product_delete')" th:href="@{'/product/delete/' + ${product.id}}" class="delete" ><i class="bi bi-trash" data-toggle="tooltip" title="删除"></i></a>
                                             </td>
                                         </tr>
+
+
 
 
 
