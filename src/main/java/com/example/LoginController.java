@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpSession;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContext;
@@ -20,6 +21,8 @@ import org.springframework.web.servlet.ModelAndView;
 @Controller
 
 public class LoginController {
+
+    private static final long PASSWORD_EXPIRATION_TIME = 30L * 24L * 60L * 60L * 1000L;    // 30 days
 
     @Autowired
     private UserService userService;
@@ -63,54 +66,126 @@ public class LoginController {
 //        User user = userService.login(userName, password);
 
         System.out.println(username + "==" + password + "==" + verifyCode);
-        // 创建用户名与密码认证对象
-        UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
-        try {
-            // 调用认证方法，返回认证对象
-            Authentication authenticate = authenticationManager.authenticate(token);
-            // 判断是否认证成功
-            if (authenticate.isAuthenticated()) {
-                // 设置用户认证成功，往Session中添加认证通过信息
-                SecurityContextHolder.getContext().setAuthentication(authenticate);
-                SecurityContext sc = SecurityContextHolder.getContext();
-                sc.setAuthentication(authenticate);
-                session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
-                // 重定向到登录成功页面
-                System.out.println(authenticate.getAuthorities());
-                Object principal = authenticate.getPrincipal();
-                System.out.println(principal.getClass());
-                //判断数据是否为空 以及类型是否正确
-                if (null != principal && principal instanceof org.springframework.security.core.userdetails.User) {
+        User userCheck = userRepository.getByUsername(username);
+        if (userCheck != null) {
+            if (!userCheck.isAccountNonLocked()) {
+                if (userService.unlockWhenTimeExpired(userCheck)) {
+
+                    System.out.println("Your account has been unlocked. Please try to login again.");
+                }
+            } else {
+
+                // 创建用户名与密码认证对象
+                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(username, password);
+                try {
+                    // 调用认证方法，返回认证对象
+                    Authentication authenticate = authenticationManager.authenticate(token);
+                    // 判断是否认证成功
+                    if (authenticate.isAuthenticated()) {
+                        // 设置用户认证成功，往Session中添加认证通过信息
+                        SecurityContextHolder.getContext().setAuthentication(authenticate);
+                        SecurityContext sc = SecurityContextHolder.getContext();
+                        sc.setAuthentication(authenticate);
+                        session.setAttribute(SPRING_SECURITY_CONTEXT_KEY, sc);
+                        // 重定向到登录成功页面
+                        System.out.println(authenticate.getAuthorities());
+                        Object principal = authenticate.getPrincipal();
+                        System.out.println(principal.getClass());
+                        //判断数据是否为空 以及类型是否正确
+                        if (null != principal && principal instanceof org.springframework.security.core.userdetails.User) {
 //                    String username = ((org.springframework.security.core.userdetails.User) principal).getUsername();
 //                    System.out.println(username);
-                    User user = userRepository.getByUsername(username);
+                            User user = userRepository.getByUsername(username);
 
-                    String homepage = "redirect:/" + user.getHomepage();
+                            if (user.getFailedAttempt() > 0) {
+                                userService.resetFailedAttempts(user.getUsername());
+                            }
 
-                    return homepage;
+                            if (user.getPasswordChangedTime() == null) {
+                                return "redirect:/change/password";
+                            }
 
+                            long currentTime = System.currentTimeMillis();
+                            long lastChangedTime = user.getPasswordChangedTime().getTime();
+
+                            if (currentTime > lastChangedTime + PASSWORD_EXPIRATION_TIME) {
+                                return "redirect:/change/password";
+                            }
+
+                            String homepage = "redirect:/" + user.getHomepage();
+
+                            return homepage;
+
+                        }
+                        return "redirect:/";
+
+                    } else {
+
+                        User user = userService.findUserByUsername(username);
+
+                        if (user != null) {
+                            if (user.getEnabled() == 1 && user.isAccountNonLocked()) {
+                                if (user.getFailedAttempt() < UserService.MAX_FAILED_ATTEMPTS - 1) {
+                                    userService.increaseFailedAttempts(user);
+                                } else {
+                                    userService.lock(user);
+                                    System.out.println("Your account has been locked due to 3 failed attempts."
+                                            + " It will be unlocked after 24 hours.");
+                                }
+                            } else if (!user.isAccountNonLocked()) {
+                                if (userService.unlockWhenTimeExpired(user)) {
+                                    System.out.println("Your account has been unlocked. Please try to login again.");
+                                }
+                            }
+
+                        }
+
+                        session.setAttribute("errorMsg", "Login failed");
+                        return "login";
+                    }
+                } catch (BadCredentialsException ex) {
+                    System.out.println("BadCredentialsException");
+                    User user = userService.findUserByUsername(username);
+
+                    if (user != null) {
+                        if (user.getEnabled() == 1 && user.isAccountNonLocked()) {
+                            System.out.println("user.getEnabled() == 1");
+                            if (user.getFailedAttempt() < UserService.MAX_FAILED_ATTEMPTS - 1) {
+                                userService.increaseFailedAttempts(user);
+                            } else {
+                                userService.lock(user);
+                                System.out.println("Your account has been locked due to 3 failed attempts."
+                                        + " It will be unlocked after 24 hours.");
+                            }
+                        } else if (!user.isAccountNonLocked()) {
+                            if (userService.unlockWhenTimeExpired(user)) {
+                                System.out.println("Your account has been unlocked. Please try to login again.");
+                            }
+                        }
+
+                    }
+//            ex.printStackTrace();
+
+                } catch (Exception ex) {
+                    ex.printStackTrace();
                 }
-                return "redirect:/";
 
-            } else {
-                session.setAttribute("errorMsg", "Login failed");
-                return "login";
             }
-        } catch (Exception ex) {
-            ex.printStackTrace();
         }
         return "login";
     }
 
     @GetMapping("/register")
-    public String showRegistrationForm(Model model) {
+    public String showRegistrationForm(Model model
+    ) {
         model.addAttribute("user", new User());
 
         return "signup_form";
     }
 
     @PostMapping("/process_register")
-    public String processRegister(User user) {
+    public String processRegister(User user
+    ) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
         String encodedPassword = passwordEncoder.encode(user.getPassword());
         user.setPassword(encodedPassword);
@@ -121,7 +196,8 @@ public class LoginController {
     }
 
     @GetMapping("/users")
-    public String listUsers(Model model) {
+    public String listUsers(Model model
+    ) {
         List<User> listUsers = userRepository.findAll();
         model.addAttribute("listUsers", listUsers);
 
@@ -129,7 +205,8 @@ public class LoginController {
     }
 
     @GetMapping("/users/edit/{id}")
-    public String editUser(@PathVariable("id") Integer id, Model model) {
+    public String editUser(@PathVariable("id") Integer id, Model model
+    ) {
         User user = userService.get(id);
         List<Role> listRoles = userService.listRoles();
         model.addAttribute("user", user);
@@ -138,7 +215,8 @@ public class LoginController {
     }
 
     @PostMapping("/users/save")
-    public String saveUser(User user) {
+    public String saveUser(User user
+    ) {
         userService.save(user);
 
         return "redirect:/users";

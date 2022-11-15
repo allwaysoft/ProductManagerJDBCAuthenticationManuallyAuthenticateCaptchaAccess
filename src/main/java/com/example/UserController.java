@@ -1,5 +1,6 @@
 package com.example;
 
+import java.util.Date;
 import java.util.List;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -99,6 +100,9 @@ public class UserController {
         User repoUser = userRepository.findById(user.getId()).orElse(null);
 
         repoUser.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
+        Date passwordChangedTime = new Date();
+
+        repoUser.setPasswordChangedTime(passwordChangedTime);
         userRepository.save(repoUser);
 
         return "redirect:/user";
