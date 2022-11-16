@@ -22,6 +22,9 @@ public class UserService {
     RoleRepository roleRepository;
 
     @Autowired
+    HistoryRepository historyRepository;
+
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     public List<UserDTO> findAllUsers() {
@@ -175,4 +178,7 @@ public class UserService {
         return false;
     }
 
+    public List<History> listHistorys() {
+        return historyRepository.findAll();
+    }
 }

@@ -2,6 +2,7 @@ package com.example;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -195,12 +196,37 @@ public class UserController {
         if (userChangePasswordDTO.getNewPass().equals(userChangePasswordDTO.getConfirmPass())) {
             User user = userService.findUserByUsername(auth.getName());
             Boolean status = userService.isPasswordValid(userChangePasswordDTO.getPassword(), user.getPassword());
-            if (status == true) {
 
-                userService.changePassword(user, userChangePasswordDTO);
-                return "login";
+            if (status == true) {
+                Set<History> setHistorysCheck = user.getHistorys();
+                Boolean check = true;
+                for (History hist : setHistorysCheck) {
+                    System.out.print(hist.getPassword());
+                    if (bCryptPasswordEncoder.matches(userChangePasswordDTO.getNewPass(), hist.getPassword())) {
+                        check = false;
+                        break;
+                    }
+                }
+
+                if (check == true) {
+
+                    System.out.println(user.getHistorys());
+                    History history = new History();
+                    System.out.println("userChangePasswordDTO.getNewPass()=" + userChangePasswordDTO.getNewPass());
+                    history.setPassword(bCryptPasswordEncoder.encode(userChangePasswordDTO.getNewPass()));
+                    System.out.println(history);
+                    Set<History> setHistorys = user.getHistorys();
+                    setHistorys.add(history);
+                    user.setHistorys(setHistorys);
+                    System.out.println(user.getHistorys());
+                    userService.changePassword(user, userChangePasswordDTO);
+                    return "login";
+                } else {
+                    model.addAttribute("passMatched", "New password was same as history..!");
+                    return "user/password_update";
+                }
             } else {
-                model.addAttribute("wrongPass", "Current possword was wrong..!");
+                model.addAttribute("wrongPass", "Current password was wrong..!");
                 return "user/password_update";
             }
 
