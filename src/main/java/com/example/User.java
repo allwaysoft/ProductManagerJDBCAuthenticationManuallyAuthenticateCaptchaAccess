@@ -34,7 +34,7 @@ public class User {
 
     private String password;
 
-    private Integer enabled;
+    private boolean enabled;
 
     private String homepage;
     @ManyToMany(fetch = FetchType.EAGER)

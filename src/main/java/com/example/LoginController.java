@@ -124,7 +124,7 @@ public class LoginController {
                         User user = userService.findUserByUsername(username);
 
                         if (user != null) {
-                            if (user.getEnabled() == 1 && user.isAccountNonLocked()) {
+                            if (user.isEnabled() == true && user.isAccountNonLocked()) {
                                 if (user.getFailedAttempt() < UserService.MAX_FAILED_ATTEMPTS - 1) {
                                     userService.increaseFailedAttempts(user);
                                 } else {
@@ -148,7 +148,7 @@ public class LoginController {
                     User user = userService.findUserByUsername(username);
 
                     if (user != null) {
-                        if (user.getEnabled() == 1 && user.isAccountNonLocked()) {
+                        if (user.isEnabled() == true && user.isAccountNonLocked()) {
                             System.out.println("user.getEnabled() == 1");
                             if (user.getFailedAttempt() < UserService.MAX_FAILED_ATTEMPTS - 1) {
                                 userService.increaseFailedAttempts(user);

@@ -17,6 +17,8 @@ public class UserDTO {
 
     private String homepage;
 
-    private int enabled;
+    private boolean enabled;
+
+    private boolean accountNonLocked;
 
 }

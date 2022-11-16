@@ -76,7 +76,8 @@ public class UserController {
         repoUser.setUsername(user.getUsername());
         repoUser.setEmail(user.getEmail());
         repoUser.setName(user.getName());
-        repoUser.setEnabled(user.getEnabled());
+        repoUser.setEnabled(user.isEnabled());
+        repoUser.setAccountNonLocked(user.isAccountNonLocked());
         repoUser.setHomepage(user.getHomepage());
         repoUser.setRoles(user.getRoles());
         userRepository.save(repoUser);

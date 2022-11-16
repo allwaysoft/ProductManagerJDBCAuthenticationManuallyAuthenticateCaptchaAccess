@@ -111,7 +111,10 @@ public class UserService {
         user.setHomepage(userDTO.getHomepage());
         System.out.println(userDTO.getPassword());
         user.setPassword(bCryptPasswordEncoder.encode(userDTO.getPassword()));
-        user.setEnabled(1);
+        user.setEnabled(userDTO.isEnabled());
+        System.out.println("userDTO.getEnabled()=" + userDTO.isEnabled());
+        System.out.println("userDTO.isAccountNonLocked()=" + userDTO.isAccountNonLocked());
+        user.setAccountNonLocked(userDTO.isAccountNonLocked());
         Date passwordChangedTime = new Date();
 
         user.setPasswordChangedTime(passwordChangedTime);
