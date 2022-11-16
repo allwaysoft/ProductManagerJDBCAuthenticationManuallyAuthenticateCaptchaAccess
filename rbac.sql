@@ -24,9 +24,9 @@ CREATE TABLE IF NOT EXISTS `history` (
   `id` int NOT NULL AUTO_INCREMENT,
   `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.history 的数据：~13 rows (大约)
+-- 正在导出表  product3.history 的数据：~0 rows (大约)
 INSERT INTO `history` (`id`, `password`) VALUES
 	(1, NULL),
 	(2, NULL),
@@ -40,7 +40,9 @@ INSERT INTO `history` (`id`, `password`) VALUES
 	(10, '$2a$10$Lv.4MczeZKZNJyi58HVtp.0wztSxduK53L7O836KQS5mxItAoQsRG'),
 	(11, '$2a$10$7jbJuk9kHXXlZQOspT2T0O/Quj/zrMZC0CrPgQvUGSrhZRoub7kUO'),
 	(12, '$2a$10$bh68pHYzneQEWElmQRT/qOp/00WldBypIacHESvZGMHZ3vBJiN88u'),
-	(13, '$2a$10$8m5rM1JZ4RLcnOpuKXFtlOeXxHxtWHk7PuXumOJFGFnRA6o5hxz7.');
+	(13, '$2a$10$8m5rM1JZ4RLcnOpuKXFtlOeXxHxtWHk7PuXumOJFGFnRA6o5hxz7.'),
+	(14, '$2a$10$VSsuBdX6sM2jtCAZ/gOhIut.aqfoymVYceSIUP6ncVMNDJmT2VjJi'),
+	(15, '$2a$10$.wqeNise86FpzDlZHrWISenOnOXryn71JNBlrhAM0Nv6Ae6M739t6');
 
 -- 导出  表 product3.permission 结构
 CREATE TABLE IF NOT EXISTS `permission` (
@@ -53,7 +55,7 @@ CREATE TABLE IF NOT EXISTS `permission` (
   UNIQUE KEY `name` (`name`)
 ) ENGINE=InnoDB AUTO_INCREMENT=35 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.permission 的数据：~28 rows (大约)
+-- 正在导出表  product3.permission 的数据：~27 rows (大约)
 INSERT INTO `permission` (`id`, `name`, `description`, `uri`, `method`) VALUES
 	(3, 'product_create', '增加产品', '/product/new', 'GET'),
 	(4, 'product_delete', '删除产品', '/product/delete/*', 'GET'),
@@ -94,7 +96,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.product 的数据：~4 rows (大约)
+-- 正在导出表  product3.product 的数据：~5 rows (大约)
 INSERT INTO `product` (`id`, `brand`, `madein`, `name`, `price`) VALUES
 	(6, '6', '6', '6', 6),
 	(7, '7', '7', '7', 7),
@@ -169,7 +171,7 @@ CREATE TABLE IF NOT EXISTS `user` (
   `email` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `name` varchar(65) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL,
   `password` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
-  `enabled` int DEFAULT '1',
+  `enabled` bit(1) DEFAULT b'1',
   `homepage` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT '',
   `password_changed_time` datetime(6) DEFAULT NULL,
   `account_non_locked` bit(1) DEFAULT b'1',
@@ -177,19 +179,23 @@ CREATE TABLE IF NOT EXISTS `user` (
   `lock_time` datetime(6) DEFAULT NULL,
   PRIMARY KEY (`id`),
   UNIQUE KEY `username` (`username`)
-) ENGINE=InnoDB AUTO_INCREMENT=27 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=31 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.user 的数据：~9 rows (大约)
+-- 正在导出表  product3.user 的数据：~13 rows (大约)
 INSERT INTO `user` (`id`, `username`, `email`, `name`, `password`, `enabled`, `homepage`, `password_changed_time`, `account_non_locked`, `failed_attempt`, `lock_time`) VALUES
-	(1, 'admin', 'admin@admin.com', '系统管理员', '$2a$10$be6TJIJNbmkUSNMTNaP/feBza0gXD5GtLpSsnC4rCWTvtWC2GOWKi', 1, '', '2022-11-16 12:12:21.830000', b'1', 0, NULL),
-	(2, 'u1', 'u1@example.com', 'User P1', '$2a$10$7lsSw2BeeDCmm6gYJBdJfuotFoDkfggWq8pWTjj7awbwywNdGHZ3u', 1, 'home', NULL, b'1', 0, NULL),
-	(3, 'u2', 'u2@example.com', 'User P2', '$2a$10$2/LSmp3YoEOT97KzgrYODen7I88ErBovM2Qehw9DL1dW9DZ7DZSAm', 1, '', NULL, b'1', 0, NULL),
-	(11, 'allway222', 'allway222@1.com', 'allway222', '$2a$10$WTg/WDKmYaYZUbFl39Z6au78WOG8LI9bcnvbbLs/.t5MjzwrBD60u', 1, 'home', NULL, b'1', 0, NULL),
-	(12, 'allway666', 'allway666@1.com', 'allway66622', '$2a$10$Jeky6hyUSN3i0u6IPF8squDtjkFwHL7WzP3rRoF4QOEwWfVAzi/c2', 1, 'home', NULL, b'1', 0, NULL),
-	(13, 'allway777', 'allway777@1.com', 'allway777', '$2a$10$W0TWw1.9lBYG7PW8KsEWcuNFGiOJAOobr55bKMQD8rf68GVppUH4S', 1, 'home', NULL, b'1', 0, NULL),
-	(14, 'test', '1@1.com', 'test', '$2a$10$Kq1sx9/uoAedR2LsUKoVQeUfY8Qho9afSKuGLj4u9Y9iTRo//17Fq', 1, 'home', NULL, b'1', 0, NULL),
-	(25, 'user102', 'Password@123.com', 'user102', '$2a$10$hZvr4Ao7ofNFdXHjPkRWXuCuuUUJmImhJjVAiiWxTBKRF2Rx5Z8RG', 1, '', '2022-11-15 15:17:05.924000', b'1', 0, NULL),
-	(26, 'user103', 'Password@123.com', 'user103', '$2a$10$E6Zy8hSM6EVV53G8PjRyoeGdVi6Rj0hkkSQHvZPARoKTwwFD0kWza', 1, '', '2022-11-16 12:20:26.190000', b'1', 0, NULL);
+	(1, 'admin', 'admin@admin.com', '系统管理员', '$2a$10$BnWGC47vHMAu5SUtNZbb0O1f19G81EdZGJ17/dSe3VJPI8wM2/oEK', b'1', '', '2022-11-16 14:22:01.550000', b'1', 0, NULL),
+	(2, 'u1', 'u1@example.com', 'User P1', '$2a$10$7lsSw2BeeDCmm6gYJBdJfuotFoDkfggWq8pWTjj7awbwywNdGHZ3u', b'1', 'home', NULL, b'1', 0, NULL),
+	(3, 'u2', 'u2@example.com', 'User P2', '$2a$10$2/LSmp3YoEOT97KzgrYODen7I88ErBovM2Qehw9DL1dW9DZ7DZSAm', b'1', '', NULL, b'1', 0, NULL),
+	(11, 'allway222', 'allway222@1.com', 'allway222', '$2a$10$WTg/WDKmYaYZUbFl39Z6au78WOG8LI9bcnvbbLs/.t5MjzwrBD60u', b'1', 'home', NULL, b'1', 0, NULL),
+	(12, 'allway666', 'allway666@1.com', 'allway66622', '$2a$10$Jeky6hyUSN3i0u6IPF8squDtjkFwHL7WzP3rRoF4QOEwWfVAzi/c2', b'1', 'home', NULL, b'1', 0, NULL),
+	(13, 'allway777', 'allway777@1.com', 'allway777', '$2a$10$W0TWw1.9lBYG7PW8KsEWcuNFGiOJAOobr55bKMQD8rf68GVppUH4S', b'1', 'home', NULL, b'1', 0, NULL),
+	(14, 'test', '1@1.com', 'test', '$2a$10$Kq1sx9/uoAedR2LsUKoVQeUfY8Qho9afSKuGLj4u9Y9iTRo//17Fq', b'1', 'home', NULL, b'1', 0, NULL),
+	(25, 'user102', 'Password@123.com', 'user102', '$2a$10$hZvr4Ao7ofNFdXHjPkRWXuCuuUUJmImhJjVAiiWxTBKRF2Rx5Z8RG', b'1', '', '2022-11-15 15:17:05.924000', b'1', 0, NULL),
+	(26, 'user103', 'Password@123.com', 'user103', '$2a$10$E6Zy8hSM6EVV53G8PjRyoeGdVi6Rj0hkkSQHvZPARoKTwwFD0kWza', b'1', '', '2022-11-16 12:20:26.190000', b'1', 0, NULL),
+	(27, 'user200', '1@1.com', 'user200', '$2a$10$8gy2nX5/nTfCPEmr8KPNfuOpQHgH9.2h6NQG0uBdlBzlK5n3jz6OC', b'1', '', '2022-11-16 14:45:42.963000', b'1', 0, NULL),
+	(28, 'user300', '1@1.com', 'user300', '$2a$10$0k1AJFxJ4/LbFyRvjH5KHONlZKDAoB34R8ze9wVcpIfkXChXPUnzu', b'1', '', '2022-11-16 14:56:20.506000', b'1', 0, NULL),
+	(29, 'user400', '1@1.com', 'user400', '$2a$10$4kM1O0mmaJ218bCiIOzODuJgmlCMDo.FoUk5l9H8i64rjRNDyeLL.', b'1', '', '2022-11-16 15:07:00.289000', b'1', 0, NULL),
+	(30, 'user500', '1@1.com', 'user500', '$2a$10$zW.LGJfSXdy14A.bCy9Nsu8g2uVPZrD04PIxqZYq6MNJx1tRIBdMu', b'1', '', '2022-11-16 15:14:52.993000', b'1', 0, NULL);
 
 -- 导出  表 product3.user_history 结构
 CREATE TABLE IF NOT EXISTS `user_history` (
@@ -201,7 +207,7 @@ CREATE TABLE IF NOT EXISTS `user_history` (
   CONSTRAINT `FKmyn0e5qi70qvka9b47oaedacw` FOREIGN KEY (`history_id`) REFERENCES `history` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.user_history 的数据：~13 rows (大约)
+-- 正在导出表  product3.user_history 的数据：~0 rows (大约)
 INSERT INTO `user_history` (`user_id`, `history_id`) VALUES
 	(1, 1),
 	(1, 2),
@@ -215,7 +221,9 @@ INSERT INTO `user_history` (`user_id`, `history_id`) VALUES
 	(1, 10),
 	(1, 11),
 	(26, 12),
-	(26, 13);
+	(26, 13),
+	(1, 14),
+	(1, 15);
 
 -- 导出  表 product3.user_role 结构
 CREATE TABLE IF NOT EXISTS `user_role` (
@@ -227,9 +235,9 @@ CREATE TABLE IF NOT EXISTS `user_role` (
   KEY `FK_user_role_role` (`role_id`),
   CONSTRAINT `FK_user_role_role` FOREIGN KEY (`role_id`) REFERENCES `role` (`id`),
   CONSTRAINT `FK_user_role_user` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=65 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=79 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.user_role 的数据：~14 rows (大约)
+-- 正在导出表  product3.user_role 的数据：~13 rows (大约)
 INSERT INTO `user_role` (`id`, `user_id`, `role_id`) VALUES
 	(59, 1, 1),
 	(58, 1, 2),
@@ -244,7 +252,11 @@ INSERT INTO `user_role` (`id`, `user_id`, `role_id`) VALUES
 	(60, 25, 1),
 	(64, 26, 1),
 	(63, 26, 2),
-	(62, 26, 3);
+	(62, 26, 3),
+	(76, 27, 1),
+	(75, 28, 1),
+	(78, 29, 1),
+	(74, 30, 1);
 
 /*!40103 SET TIME_ZONE=IFNULL(@OLD_TIME_ZONE, 'system') */;
 /*!40101 SET SQL_MODE=IFNULL(@OLD_SQL_MODE, '') */;
