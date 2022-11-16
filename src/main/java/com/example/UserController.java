@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import javax.validation.Valid;
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -198,34 +199,44 @@ public class UserController {
             Boolean status = userService.isPasswordValid(userChangePasswordDTO.getPassword(), user.getPassword());
 
             if (status == true) {
-                Set<History> setHistorysCheck = user.getHistorys();
-                Boolean check = true;
-                for (History hist : setHistorysCheck) {
-                    System.out.print(hist.getPassword());
-                    if (bCryptPasswordEncoder.matches(userChangePasswordDTO.getNewPass(), hist.getPassword())) {
-                        check = false;
-                        break;
+
+                LevenshteinDistance levenshteinWithThreshold = new LevenshteinDistance(3);
+                // Returns -1 since the actual distance, 4, is higher than the threshold
+                System.out.println("Levenshtein distance: " + levenshteinWithThreshold.apply(userChangePasswordDTO.getNewPass(), userChangePasswordDTO.getPassword()));
+                if (levenshteinWithThreshold.apply(userChangePasswordDTO.getNewPass(), userChangePasswordDTO.getPassword()) == -1) {
+                    Set<History> setHistorysCheck = user.getHistorys();
+                    Boolean check = true;
+                    for (History hist : setHistorysCheck) {
+                        System.out.print(hist.getPassword());
+                        if (bCryptPasswordEncoder.matches(userChangePasswordDTO.getNewPass(), hist.getPassword())) {
+                            check = false;
+                            break;
+                        }
                     }
-                }
 
-                if (check == true) {
+                    if (check == true) {
 
-                    System.out.println(user.getHistorys());
-                    History history = new History();
-                    System.out.println("userChangePasswordDTO.getNewPass()=" + userChangePasswordDTO.getNewPass());
-                    history.setPassword(bCryptPasswordEncoder.encode(userChangePasswordDTO.getNewPass()));
-                    System.out.println(history);
-                    Set<History> setHistorys = user.getHistorys();
-                    setHistorys.add(history);
-                    user.setHistorys(setHistorys);
-                    System.out.println(user.getHistorys());
-                    userService.changePassword(user, userChangePasswordDTO);
-                    return "login";
+                        System.out.println(user.getHistorys());
+                        History history = new History();
+                        System.out.println("userChangePasswordDTO.getNewPass()=" + userChangePasswordDTO.getNewPass());
+                        history.setPassword(bCryptPasswordEncoder.encode(userChangePasswordDTO.getNewPass()));
+                        System.out.println(history);
+                        Set<History> setHistorys = user.getHistorys();
+                        setHistorys.add(history);
+                        user.setHistorys(setHistorys);
+                        System.out.println(user.getHistorys());
+                        userService.changePassword(user, userChangePasswordDTO);
+                        return "login";
+                    } else {
+                        model.addAttribute("passMatched", "New password was same as history..!");
+                        return "user/password_update";
+                    }
                 } else {
-                    model.addAttribute("passMatched", "New password was same as history..!");
+                    model.addAttribute("passMatched", "New password need 4 diff wtih Current password..!");
                     return "user/password_update";
                 }
             } else {
+
                 model.addAttribute("wrongPass", "Current password was wrong..!");
                 return "user/password_update";
             }
