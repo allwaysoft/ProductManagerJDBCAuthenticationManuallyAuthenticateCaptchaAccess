@@ -19,6 +19,29 @@
 CREATE DATABASE IF NOT EXISTS `product3` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
 USE `product3`;
 
+-- 导出  表 product3.history 结构
+CREATE TABLE IF NOT EXISTS `history` (
+  `id` int NOT NULL AUTO_INCREMENT,
+  `password` varchar(255) COLLATE utf8mb4_unicode_ci DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 正在导出表  product3.history 的数据：~13 rows (大约)
+INSERT INTO `history` (`id`, `password`) VALUES
+	(1, NULL),
+	(2, NULL),
+	(3, NULL),
+	(4, NULL),
+	(5, NULL),
+	(6, NULL),
+	(7, '$2a$10$f8BTEI8AkiBQV60MvzpnVehdo9.AM6Zevvg8817dj5qbNuu.p3B22'),
+	(8, '$2a$10$9.ZG.D.e8u4NhGkGCVVUcOqpOB1b6WpCM7hEdawqIFo1G7Mg6/bt.'),
+	(9, '$2a$10$IK/CKJLp5jH7hQYjfTjZIeAPPNuI2rGQuEWMk8Z.Of9QkUvQC28X6'),
+	(10, '$2a$10$Lv.4MczeZKZNJyi58HVtp.0wztSxduK53L7O836KQS5mxItAoQsRG'),
+	(11, '$2a$10$7jbJuk9kHXXlZQOspT2T0O/Quj/zrMZC0CrPgQvUGSrhZRoub7kUO'),
+	(12, '$2a$10$bh68pHYzneQEWElmQRT/qOp/00WldBypIacHESvZGMHZ3vBJiN88u'),
+	(13, '$2a$10$8m5rM1JZ4RLcnOpuKXFtlOeXxHxtWHk7PuXumOJFGFnRA6o5hxz7.');
+
 -- 导出  表 product3.permission 结构
 CREATE TABLE IF NOT EXISTS `permission` (
   `id` int NOT NULL AUTO_INCREMENT,
@@ -71,7 +94,7 @@ CREATE TABLE IF NOT EXISTS `product` (
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
--- 正在导出表  product3.product 的数据：~5 rows (大约)
+-- 正在导出表  product3.product 的数据：~4 rows (大约)
 INSERT INTO `product` (`id`, `brand`, `madein`, `name`, `price`) VALUES
 	(6, '6', '6', '6', 6),
 	(7, '7', '7', '7', 7),
@@ -158,7 +181,7 @@ CREATE TABLE IF NOT EXISTS `user` (
 
 -- 正在导出表  product3.user 的数据：~9 rows (大约)
 INSERT INTO `user` (`id`, `username`, `email`, `name`, `password`, `enabled`, `homepage`, `password_changed_time`, `account_non_locked`, `failed_attempt`, `lock_time`) VALUES
-	(1, 'admin', 'admin@admin.com', '系统管理员', '$2a$10$rouJbLys6oKzcXb1clpz0OKEtADYfbFvPOkb6UzX.9z/CLW6hTiqG', 1, '', '2022-11-15 15:34:39.329000', b'1', 0, NULL),
+	(1, 'admin', 'admin@admin.com', '系统管理员', '$2a$10$be6TJIJNbmkUSNMTNaP/feBza0gXD5GtLpSsnC4rCWTvtWC2GOWKi', 1, '', '2022-11-16 12:12:21.830000', b'1', 0, NULL),
 	(2, 'u1', 'u1@example.com', 'User P1', '$2a$10$7lsSw2BeeDCmm6gYJBdJfuotFoDkfggWq8pWTjj7awbwywNdGHZ3u', 1, 'home', NULL, b'1', 0, NULL),
 	(3, 'u2', 'u2@example.com', 'User P2', '$2a$10$2/LSmp3YoEOT97KzgrYODen7I88ErBovM2Qehw9DL1dW9DZ7DZSAm', 1, '', NULL, b'1', 0, NULL),
 	(11, 'allway222', 'allway222@1.com', 'allway222', '$2a$10$WTg/WDKmYaYZUbFl39Z6au78WOG8LI9bcnvbbLs/.t5MjzwrBD60u', 1, 'home', NULL, b'1', 0, NULL),
@@ -166,7 +189,33 @@ INSERT INTO `user` (`id`, `username`, `email`, `name`, `password`, `enabled`, `h
 	(13, 'allway777', 'allway777@1.com', 'allway777', '$2a$10$W0TWw1.9lBYG7PW8KsEWcuNFGiOJAOobr55bKMQD8rf68GVppUH4S', 1, 'home', NULL, b'1', 0, NULL),
 	(14, 'test', '1@1.com', 'test', '$2a$10$Kq1sx9/uoAedR2LsUKoVQeUfY8Qho9afSKuGLj4u9Y9iTRo//17Fq', 1, 'home', NULL, b'1', 0, NULL),
 	(25, 'user102', 'Password@123.com', 'user102', '$2a$10$hZvr4Ao7ofNFdXHjPkRWXuCuuUUJmImhJjVAiiWxTBKRF2Rx5Z8RG', 1, '', '2022-11-15 15:17:05.924000', b'1', 0, NULL),
-	(26, 'user103', 'Password@123.com', 'user103', '$2a$10$XOOH81X1bdmOAzK154o3JOhsM2bfe70A3BQCyHwgUoWJxon39I8QS', 1, '', '2022-11-15 15:35:58.437000', b'1', 0, NULL);
+	(26, 'user103', 'Password@123.com', 'user103', '$2a$10$E6Zy8hSM6EVV53G8PjRyoeGdVi6Rj0hkkSQHvZPARoKTwwFD0kWza', 1, '', '2022-11-16 12:20:26.190000', b'1', 0, NULL);
+
+-- 导出  表 product3.user_history 结构
+CREATE TABLE IF NOT EXISTS `user_history` (
+  `user_id` int NOT NULL,
+  `history_id` int NOT NULL,
+  PRIMARY KEY (`user_id`,`history_id`),
+  KEY `FKmyn0e5qi70qvka9b47oaedacw` (`history_id`),
+  CONSTRAINT `FKaa6ilb6iqih95bntoeyysb2pc` FOREIGN KEY (`user_id`) REFERENCES `user` (`id`),
+  CONSTRAINT `FKmyn0e5qi70qvka9b47oaedacw` FOREIGN KEY (`history_id`) REFERENCES `history` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- 正在导出表  product3.user_history 的数据：~13 rows (大约)
+INSERT INTO `user_history` (`user_id`, `history_id`) VALUES
+	(1, 1),
+	(1, 2),
+	(1, 3),
+	(1, 4),
+	(1, 5),
+	(1, 6),
+	(1, 7),
+	(1, 8),
+	(1, 9),
+	(1, 10),
+	(1, 11),
+	(26, 12),
+	(26, 13);
 
 -- 导出  表 product3.user_role 结构
 CREATE TABLE IF NOT EXISTS `user_role` (
